@@ -22,6 +22,8 @@
 
 @end
 
+#if NS_BLOCKS_AVAILABLE
+
 typedef void (^MAKVONotificationBlock)(NSString *, NSDictionary *, id);
 
 @interface MAKVONotificationBlockObserver : NSObject {
@@ -34,15 +36,21 @@ typedef void (^MAKVONotificationBlock)(NSString *, NSDictionary *, id);
 - (id)initWithBlock:(MAKVONotificationBlock)aBlock keyPath:(NSString *)aKeyPath;
 @end
 
+#endif
+
 @interface NSObject (MAKVONotification)
 
 - (void)addObserver:(id)observer forKeyPath:(NSString *)keyPath selector:(SEL)selector userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options;
 - (void)removeObserver:(id)observer keyPath:(NSString *)keyPath selector:(SEL)selector;
+
+#if NS_BLOCKS_AVAILABLE
 
 #pragma mark - Block support
 
 - (MAKVONotificationBlockObserver *)addObserverForKeyPath:(NSString *)keyPath userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options handleWithBlock:(MAKVONotificationBlock)block;
 
 - (void)removeBlockObserver:(MAKVONotificationBlockObserver *)observer;
+
+#endif
 
 @end

@@ -146,6 +146,8 @@ static char MAKVONotificationHelperMagicContext;
 
 @end
 
+#if NS_BLOCKS_AVAILABLE
+
 @implementation MAKVONotificationBlockObserver
 
 @synthesize keyPath;
@@ -178,6 +180,8 @@ static char MAKVONotificationHelperMagicContext;
 
 @end
 
+#endif
+
 @implementation NSObject (MAKVONotification)
 
 - (void)addObserver:(id)observer forKeyPath:(NSString *)keyPath selector:(SEL)selector userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options
@@ -189,6 +193,8 @@ static char MAKVONotificationHelperMagicContext;
 {
 	[[MAKVONotificationCenter defaultCenter] removeObserver:observer object:self keyPath:keyPath selector:selector];
 }
+
+#if NS_BLOCKS_AVAILABLE
 
 #pragma mark - Block support
 
@@ -203,5 +209,7 @@ static char MAKVONotificationHelperMagicContext;
 {
   [self removeObserver:observer keyPath:observer.keyPath selector:observer.selectorForObserving];
 }
+
+#endif
 
 @end
