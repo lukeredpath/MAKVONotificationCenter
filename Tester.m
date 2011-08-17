@@ -36,8 +36,8 @@
                                @"foo", @"key",
                                nil];
 
-  MAKVONotificationBlockObserver *observer = [dict addObserverForKeyPath:@"key" userInfo:@"userInfo" options:NSKeyValueObservingOptionNew handleWithBlock:^(NSDictionary *change, id userInfo) {
-    NSLog(@"%@ changed key dictionary %@ info %@", dict, change, userInfo);
+  MAKVONotificationBlockObserver *observer = [dict addObserverForKeyPath:@"key" userInfo:@"userInfo" options:NSKeyValueObservingOptionNew handleWithBlock:^(NSString *keyPath, NSDictionary *change, id userInfo) {
+    NSLog(@"%@ changed %@ dictionary %@ info %@", dict, keyPath, change, userInfo);
     _triggered = YES;
   }];
   

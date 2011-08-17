@@ -22,10 +22,16 @@
 
 @end
 
-typedef void (^MAKVONotificationBlock)(NSDictionary *, id);
+typedef void (^MAKVONotificationBlock)(NSString *, NSDictionary *, id);
 
-@interface MAKVONotificationBlockObserver : NSObject
+@interface MAKVONotificationBlockObserver : NSObject {
+  MAKVONotificationBlock block;
+  NSString *keyPath;
+}
+@property (nonatomic, readonly) NSString *keyPath;
+@property (nonatomic, readonly) SEL selectorForObserving;
 
+- (id)initWithBlock:(MAKVONotificationBlock)aBlock keyPath:(NSString *)aKeyPath;
 @end
 
 @interface NSObject (MAKVONotification)

@@ -146,6 +146,38 @@ static char MAKVONotificationHelperMagicContext;
 
 @end
 
+@implementation MAKVONotificationBlockObserver
+
+@synthesize keyPath;
+
+- (id)initWithBlock:(MAKVONotificationBlock)aBlock keyPath:(NSString *)aKeyPath
+{
+  if ((self = [super init])) {
+    block = [aBlock copy];
+    keyPath = [aKeyPath copy];
+  }
+  return self;
+}
+
+- (void)dealloc 
+{
+  [keyPath release];
+  [block release];
+  [super dealloc];
+}
+
+- (SEL)selectorForObserving
+{
+  return @selector(_observeValueForKeyPath:ofObject:change:userInfo:);
+}
+
+- (void)_observeValueForKeyPath:(NSString *)theKeyPath ofObject:(id)target change:(NSDictionary *)change userInfo:(id)userInfo
+{
+  block(theKeyPath, change, userInfo);
+}
+
+@end
+
 @implementation NSObject (MAKVONotification)
 
 - (void)addObserver:(id)observer forKeyPath:(NSString *)keyPath selector:(SEL)selector userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options
@@ -162,12 +194,14 @@ static char MAKVONotificationHelperMagicContext;
 
 - (MAKVONotificationBlockObserver *)addObserverForKeyPath:(NSString *)keyPath userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options handleWithBlock:(MAKVONotificationBlock)block
 {
-  return nil;
+  MAKVONotificationBlockObserver *observer = [[MAKVONotificationBlockObserver alloc] initWithBlock:block keyPath:keyPath];
+  [self addObserver:observer forKeyPath:keyPath selector:observer.selectorForObserving userInfo:userInfo options:options];
+  return [observer autorelease];
 }
 
 - (void)removeBlockObserver:(MAKVONotificationBlockObserver *)observer
 {
-  
+  [self removeObserver:observer keyPath:observer.keyPath selector:observer.selectorForObserving];
 }
 
 @end
