@@ -158,4 +158,16 @@ static char MAKVONotificationHelperMagicContext;
 	[[MAKVONotificationCenter defaultCenter] removeObserver:observer object:self keyPath:keyPath selector:selector];
 }
 
+#pragma mark - Block support
+
+- (MAKVONotificationBlockObserver *)addObserverForKeyPath:(NSString *)keyPath userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options handleWithBlock:(MAKVONotificationBlock)block
+{
+  return nil;
+}
+
+- (void)removeBlockObserver:(MAKVONotificationBlockObserver *)observer
+{
+  
+}
+
 @end

@@ -30,6 +30,27 @@
 	NSAssert(!_triggered, @"triggered after deregistering");
 }
 
+- (void)testBlockObserver
+{
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                               @"foo", @"key",
+                               nil];
+
+  MAKVONotificationBlockObserver *observer = [dict addObserverForKeyPath:@"key" userInfo:@"userInfo" options:NSKeyValueObservingOptionNew handleWithBlock:^(NSDictionary *change, id userInfo) {
+    NSLog(@"%@ changed key dictionary %@ info %@", dict, change, userInfo);
+    _triggered = YES;
+  }];
+  
+  [dict setObject:@"bar" forKey:@"key"];
+  NSAssert(_triggered, @"failed to trigger");
+  
+  [dict removeBlockObserver:observer];
+  
+  _triggered = NO;
+  [dict setObject:@"foo" forKey:@"key"];
+	NSAssert(!_triggered, @"triggered after deregistering");
+}
+
 - (void)_observeValueForKeyPath:(NSString *)keyPath ofObject:(id)target change:(NSDictionary *)change userInfo:(id)userInfo
 {
 	NSLog(@"%s: %@ changed %@ dictionary %@ info %@", __func__, target, keyPath, change, userInfo);
@@ -44,6 +65,7 @@ int main(int argc, char **argv)
 	
 	Tester *tester = [[Tester alloc] init];
 	[tester testDictionary];
+  [tester testBlockObserver];
 	
 	[pool release];
 	return 0;

@@ -22,9 +22,21 @@
 
 @end
 
+typedef void (^MAKVONotificationBlock)(NSDictionary *, id);
+
+@interface MAKVONotificationBlockObserver : NSObject
+
+@end
+
 @interface NSObject (MAKVONotification)
 
 - (void)addObserver:(id)observer forKeyPath:(NSString *)keyPath selector:(SEL)selector userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options;
 - (void)removeObserver:(id)observer keyPath:(NSString *)keyPath selector:(SEL)selector;
+
+#pragma mark - Block support
+
+- (MAKVONotificationBlockObserver *)addObserverForKeyPath:(NSString *)keyPath userInfo:(id)userInfo options:(NSKeyValueObservingOptions)options handleWithBlock:(MAKVONotificationBlock)block;
+
+- (void)removeBlockObserver:(MAKVONotificationBlockObserver *)observer;
 
 @end
